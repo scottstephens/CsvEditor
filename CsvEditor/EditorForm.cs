@@ -226,5 +226,20 @@ namespace CsvEditor
                 }
             }
         }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var f = this.Shared.LaunchForm(() => new OpenFileForm(this.Shared, new string[] { }));
+            f.Show();
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var result = this.SaveFileDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                this.Save(this.SaveFileDialog.FileName);
+            }
+        }
     }
 }
