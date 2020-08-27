@@ -19,6 +19,7 @@ namespace CsvEditor
         {
             InitializeComponent();
             this.Shared = shared;
+            this.Text = this.Shared.Title;
             if (args.Length == 1)
                 tbFilePath.Text = args[0];
             else if (args.Length != 0)

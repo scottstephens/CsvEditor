@@ -9,6 +9,8 @@ namespace CsvEditor
 {
     public class Shared
     {
+        public readonly string Title = "CsvEditor";
+
         public HashSet<Form> OpenForms = new HashSet<Form>();
 
         public T LaunchForm<T>(Func<T> form_builder) where T : Form

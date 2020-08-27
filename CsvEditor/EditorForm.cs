@@ -29,6 +29,15 @@ namespace CsvEditor
             this.Shared = shared;
             this.FilePath = file_path;
             this.ParseSettings = parse_settings;
+            this.SetTitle(false);
+        }
+
+        private void SetTitle(bool has_changes)
+        {
+            if (!has_changes)
+                this.Text = $"{this.Shared.Title} - {this.FilePath}";
+            else
+                this.Text = $"{this.Shared.Title} - *{this.FilePath}"; 
         }
 
         private void Parse(object unused)
@@ -158,12 +167,14 @@ namespace CsvEditor
                 this.Rows.Add(this.RowInEdit);
                 this.RowInEdit = null;
                 this.RowInEditIndex = -1;
+                this.SetTitle(true);
             }
             else if (this.RowInEdit != null && e.RowIndex < this.Rows.Count)
             {
                 this.Rows[e.RowIndex] = this.RowInEdit;
                 this.RowInEdit = null;
                 this.RowInEditIndex = -1;
+                this.SetTitle(true);
             }
             else if (this.DataGridView.ContainsFocus)
             {
@@ -205,6 +216,7 @@ namespace CsvEditor
                 this.RowInEditIndex = -1;
                 this.RowInEdit = null;
             }
+            this.SetTitle(true);
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -225,6 +237,8 @@ namespace CsvEditor
                     writer.WriteLine(line);
                 }
             }
+            this.SetTitle(false);
+            tslStatus.Text = $"Saved {dest_path}";
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
