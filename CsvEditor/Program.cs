@@ -8,18 +8,34 @@ namespace CsvEditor
 {
     static class Program
     {
+        private static Shared Shared;
+        private static string[] Args;
+
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
 #if NETCOREAPP
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
 #endif
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Main());
+
+            Args = args;
+            Shared = new Shared();
+
+            Application.Idle += Application_Idle;
+
+            Application.Run();
+        }
+
+        private static void Application_Idle(object sender, EventArgs e)
+        {
+            Application.Idle -= Application_Idle;
+            var f = Shared.LaunchForm(() => new OpenFileForm(Shared, Args));
+            f.Show();
         }
     }
 }
