@@ -28,18 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.tslStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.DataGridView = new System.Windows.Forms.DataGridView();
             this.SaveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.tslStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.cmsColumnHeader = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView)).BeginInit();
+            this.cmsColumnHeader.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -93,6 +96,11 @@
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
+            // tslStatus
+            // 
+            this.tslStatus.Name = "tslStatus";
+            this.tslStatus.Size = new System.Drawing.Size(0, 17);
+            // 
             // DataGridView
             // 
             this.DataGridView.AllowUserToOrderColumns = true;
@@ -105,10 +113,10 @@
             this.DataGridView.Size = new System.Drawing.Size(776, 398);
             this.DataGridView.TabIndex = 2;
             // 
-            // tslStatus
+            // cmsColumnHeader
             // 
-            this.tslStatus.Name = "tslStatus";
-            this.tslStatus.Size = new System.Drawing.Size(0, 17);
+            this.cmsColumnHeader.Name = "cmsColumnHeader";
+            this.cmsColumnHeader.Size = new System.Drawing.Size(181, 70);
             // 
             // EditorForm
             // 
@@ -118,15 +126,18 @@
             this.Controls.Add(this.DataGridView);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "EditorForm";
             this.Text = "CsvEditor";
             this.Load += new System.EventHandler(this.Main_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.EditorForm_KeyDown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView)).EndInit();
+            this.cmsColumnHeader.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -143,6 +154,7 @@
         private System.Windows.Forms.DataGridView DataGridView;
         private System.Windows.Forms.SaveFileDialog SaveFileDialog;
         private System.Windows.Forms.ToolStripStatusLabel tslStatus;
+        private System.Windows.Forms.ContextMenuStrip cmsColumnHeader;
     }
 }
 

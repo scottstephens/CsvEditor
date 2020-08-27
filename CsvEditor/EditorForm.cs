@@ -22,14 +22,122 @@ namespace CsvEditor
         private int RowInEditIndex;
         private List<string> RowInEdit;
         private bool rowScopeCommit = false;
+        private int cmsColumnHeader_ColumnIndex;
 
         public EditorForm(Shared shared, string file_path, ParseSettings parse_settings)
         {
             InitializeComponent();
+            this.Init();
             this.Shared = shared;
             this.FilePath = file_path;
             this.ParseSettings = parse_settings;
             this.SetTitle(false);
+            this.DataGridView.CellContextMenuStripNeeded += DataGridView_CellContextMenuStripNeeded;
+        }
+
+        private ToolStripMenuItem tsmiFreeze;
+        private ToolStripMenuItem tsmiUnfreeze;
+        private ToolStripMenuItem tsmiHide;
+        private ToolStripMenuItem tsmiUnhideLeft;
+        private ToolStripMenuItem tsmiUnhideRight;
+
+        private void Init()
+        {
+            this.tsmiFreeze = new ToolStripMenuItem();
+            this.tsmiFreeze.Name = nameof(this.tsmiFreeze);
+            this.tsmiFreeze.Text = "Freeze";
+            this.tsmiFreeze.Click += TsmiFreeze_Click;
+
+            this.tsmiUnfreeze = new ToolStripMenuItem();
+            this.tsmiUnfreeze.Name = nameof(this.tsmiUnfreeze);
+            this.tsmiUnfreeze.Text = "Unfreeze";
+            this.tsmiUnfreeze.Click += TsmiUnfreeze_Click; ;
+
+            this.tsmiHide = new ToolStripMenuItem();
+            this.tsmiHide.Name = nameof(this.tsmiHide);
+            this.tsmiHide.Text = "Hide";
+            this.tsmiHide.Click += TsmiHide_Click;
+
+            this.tsmiUnhideLeft = new ToolStripMenuItem();
+            this.tsmiUnhideLeft.Name = nameof(this.tsmiUnhideLeft);
+            this.tsmiUnhideLeft.Text = "Unhide Left";
+            this.tsmiUnhideLeft.Click += TsmiUnhideLeft_Click;
+
+            this.tsmiUnhideRight = new ToolStripMenuItem();
+            this.tsmiUnhideRight.Name = nameof(this.tsmiUnhideRight);
+            this.tsmiUnhideRight.Text = "Unhide Right";
+            this.tsmiUnhideRight.Click += TsmiUnhideRight_Click;
+        }
+
+        private void TsmiUnhideRight_Click(object sender, EventArgs e)
+        {
+            for (int ii = this.cmsColumnHeader_ColumnIndex + 1; ii < this.DataGridView.Columns.Count; ++ii)
+            {
+                if (this.DataGridView.Columns[ii].Visible)
+                    break;
+                else
+                    this.DataGridView.Columns[ii].Visible = true;
+            }
+        }
+
+        private void TsmiUnhideLeft_Click(object sender, EventArgs e)
+        {
+            for (int ii = this.cmsColumnHeader_ColumnIndex - 1; ii >= 0; --ii)
+            {
+                if (this.DataGridView.Columns[ii].Visible)
+                    break;
+                else
+                    this.DataGridView.Columns[ii].Visible = true;
+            }
+        }
+
+        private void TsmiHide_Click(object sender, EventArgs e)
+        {
+            this.DataGridView.Columns[this.cmsColumnHeader_ColumnIndex].Visible = false;
+        }
+
+        private void TsmiUnfreeze_Click(object sender, EventArgs e)
+        {
+            for (int ii = this.cmsColumnHeader_ColumnIndex; ii >= 0; --ii)
+                this.DataGridView.Columns[ii].Frozen = false;
+        }
+
+        private void TsmiFreeze_Click(object sender, EventArgs e)
+        {
+            this.DataGridView.Columns[this.cmsColumnHeader_ColumnIndex].Frozen = true;
+        }
+
+        private void DataGridView_CellContextMenuStripNeeded(object sender, DataGridViewCellContextMenuStripNeededEventArgs e)
+        {
+            if (e.RowIndex == -1)
+            {
+                this.cmsColumnHeader.Items.Clear();
+                if (this.DataGridView.Columns[e.ColumnIndex].Frozen)
+                    this.cmsColumnHeader.Items.Add(this.tsmiUnfreeze);
+                else
+                    this.cmsColumnHeader.Items.Add(this.tsmiFreeze);
+                
+                this.cmsColumnHeader.Items.Add(this.tsmiHide);
+                for (int ii = e.ColumnIndex - 1; ii >= 0; --ii)
+                {
+                    if (!this.DataGridView.Columns[ii].Visible)
+                    {
+                        this.cmsColumnHeader.Items.Add(this.tsmiUnhideLeft);
+                        break;
+                    }
+                }
+                for (int ii = e.ColumnIndex + 1; ii < this.DataGridView.Columns.Count; ++ii)
+                {
+                    if (!this.DataGridView.Columns[ii].Visible)
+                    {
+                        this.cmsColumnHeader.Items.Add(this.tsmiUnhideRight);
+                        break;
+                    }
+                }
+
+                e.ContextMenuStrip = this.cmsColumnHeader;
+                this.cmsColumnHeader_ColumnIndex = e.ColumnIndex;
+            }
         }
 
         private void SetTitle(bool has_changes)
@@ -255,5 +363,15 @@ namespace CsvEditor
                 this.Save(this.SaveFileDialog.FileName);
             }
         }
+
+        private void EditorForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.S)
+            {
+                this.Save(this.FilePath);
+            }
+        }
+
+        
     }
 }
