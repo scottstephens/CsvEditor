@@ -372,6 +372,9 @@ namespace CsvEditor
             }
         }
 
-        
+        private void findToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
